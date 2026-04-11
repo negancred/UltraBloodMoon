@@ -28,19 +28,27 @@ public class VariantManager {
     }
 
     public void start() {
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        runLoop();
 
-            if (!nightSwitch.isBloodMoonActive()) return;
+    }
+    private void runLoop() {
+        var moon = nightSwitch.getMoonManager().getCurrentMoon();
+        long delay = (moon != null) ? moon.getSpawnInterval() : 100L;
 
-            var moon = nightSwitch.getMoonManager().getCurrentMoon();
-            if (moon == null) return;
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
 
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                spawnHostileNearPlayer(player);
+            if (nightSwitch.isBloodMoonActive() && moon != null) {
+
+
+
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    spawnHostileNearPlayer(player);
+                }
             }
-            System.out.println("Interval right now is: " + getCurrentInterval());
 
-        }, 0L, getCurrentInterval());
+            runLoop();
+
+        }, delay);
     }
 
     private void spawnHostileNearPlayer(Player player) {
@@ -64,7 +72,7 @@ public class VariantManager {
             try {
                 y = world.getHighestBlockYAt(x, z) + 1;
             } catch (Exception e) {
-                Bukkit.getLogger().info("Attempt " + i + ": height error " + e.getMessage());
+                // Bukkit.getLogger().info("Attempt " + i + ": height error " + e.getMessage());
                 continue;
             }
 

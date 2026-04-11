@@ -22,6 +22,6 @@ public abstract class Moon {
         return 1.0;
     }
     public long getSpawnInterval() {
-        return 100L; // default
+        return 100L;
     }
 }

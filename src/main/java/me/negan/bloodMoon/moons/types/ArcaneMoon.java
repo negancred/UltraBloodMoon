@@ -10,6 +10,7 @@ import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntitySpellCastEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -267,9 +268,24 @@ public class ArcaneMoon extends Moon implements Listener {
             event.setCancelled(true);
         }
     }
+    @EventHandler
+    public void onIllusionerCast(EntitySpellCastEvent event) {
+
+        if (!active) return;
+
+        if (!(event.getEntity() instanceof Illusioner illusioner)) return;
+
+        NamespacedKey key = new NamespacedKey(plugin, "arcane_illusioner");
+
+        if (!illusioner.getPersistentDataContainer().has(key, PersistentDataType.BYTE)) return;
+
+        if (event.getSpell() == Spellcaster.Spell.BLINDNESS) {
+            event.setCancelled(true);
+        }
+    }
     @Override
     public long getSpawnInterval() {
-        return 20L * 120;
+        return 240L;
     }
 
 }

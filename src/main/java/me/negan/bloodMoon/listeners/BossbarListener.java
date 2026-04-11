@@ -64,13 +64,12 @@ public class BossbarListener implements Listener {
         bossBarManager.addKill(player);
     }
 
-    // 💀 Player death → penalty
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         bossBarManager.onDeath(event.getEntity());
     }
 
-    // 🧠 Detect Blood Moon mobs using global tag
+
     private boolean isBloodMoonMob(EntityDeathEvent e) {
         NamespacedKey key = new NamespacedKey(plugin, "moon_mob");
 

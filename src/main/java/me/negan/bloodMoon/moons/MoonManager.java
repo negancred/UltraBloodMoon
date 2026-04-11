@@ -7,12 +7,14 @@ import me.negan.bloodMoon.moons.types.HallowedMoon;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.java.JavaPlugin;
 
+
 import java.util.Random;
 
 public class MoonManager {
 
     private Moon currentMoon;
     private final Random random = new Random();
+
     private final BloodMoon plugin;
 
     public MoonManager(BloodMoon plugin) {
