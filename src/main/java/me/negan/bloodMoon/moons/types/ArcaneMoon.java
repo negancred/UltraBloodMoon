@@ -3,6 +3,7 @@ package me.negan.bloodMoon.moons.types;
 import me.negan.bloodMoon.manager.BossbarManager;
 import me.negan.bloodMoon.moons.Moon;
 import me.negan.bloodMoon.utils.BroadcastUtil;
+import me.negan.bloodMoon.utils.SoundUtil;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.damage.DamageSource;
@@ -82,6 +83,8 @@ public class ArcaneMoon extends Moon implements Listener {
 
         BroadcastUtil.broadcastRandom(messages);
         bossBarManager.start(BarColor.PURPLE, "§5Arcane Moon");
+        SoundUtil.playGlobalSound(Sound.AMBIENT_CAVE, 1.2f, 1.8f);
+        SoundUtil.playGlobalSound(Sound.ENTITY_EVOKER_PREPARE_SUMMON, 1.0f, 0.7f);
 
         startMechanicLoop();
     }
@@ -227,7 +230,7 @@ public class ArcaneMoon extends Moon implements Listener {
                 if (p == null) continue;
 
                 double healed = healMap.getOrDefault(uuid, 0.0);
-                double damage = Math.min(healed, maxDecayDamage);
+                double damage = Math.min(healed * 1.5, maxDecayDamage);
 
                 if (damage > 0) {
                     p.damage(damage);

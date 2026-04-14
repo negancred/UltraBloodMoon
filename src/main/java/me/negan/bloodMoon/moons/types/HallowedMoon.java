@@ -3,6 +3,7 @@ package me.negan.bloodMoon.moons.types;
 import me.negan.bloodMoon.manager.BossbarManager;
 import me.negan.bloodMoon.moons.Moon;
 import me.negan.bloodMoon.utils.BroadcastUtil;
+import me.negan.bloodMoon.utils.SoundUtil;
 import me.negan.bloodMoon.variants.variant.SpookyArcher;
 import me.negan.bloodMoon.variants.variant.SpookySkeleton;
 import org.bukkit.*;
@@ -40,6 +41,10 @@ public class HallowedMoon extends Moon {
         };
 
         BroadcastUtil.broadcastRandom(messages);
+
+        SoundUtil.playGlobalSound(Sound.ENTITY_WITCH_CELEBRATE, 1.0f, 1.5f);
+        SoundUtil.playGlobalSound(Sound.AMBIENT_CAVE, 1.2f, 1.8f);
+
         bossBarManager.start(BarColor.YELLOW, "§6Hallowed Moon");
     }
 

@@ -23,12 +23,13 @@ public class MoonManager {
 
     public void startNight() {
 
+        if (currentMoon == null) {
+            currentMoon = pickMoon();
+        }
 
-        currentMoon = pickMoon();
-
-        currentMoon.onNightStart();
-
-
+        if (currentMoon != null) {
+            currentMoon.onNightStart();
+        }
     }
 
     public void tickNight() {
@@ -70,6 +71,6 @@ public class MoonManager {
         }
 
         currentMoon = moon;
-        currentMoon.onNightStart();
+        //currentMoon.onNightStart();
     }
 }

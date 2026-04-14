@@ -54,6 +54,11 @@ public class VariantManager {
     private void spawnHostileNearPlayer(Player player) {
 
         World world = player.getWorld();
+        if (world.getEnvironment() != World.Environment.NORMAL) {
+            Bukkit.getLogger().info("[Spawn] World is not overworld. Skipping spawn.");
+            return;
+        }
+
 
         for (int i = 0; i < 6; i++) {
 

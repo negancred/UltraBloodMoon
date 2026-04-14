@@ -13,6 +13,7 @@ public class NightManager {
     private final MoonManager moonManager;
 
     private boolean countedThisNight = false;
+    private boolean countedThisDay = false;
 
     public NightManager(JavaPlugin plugin, NightSwitchUtil nightSwitch, MoonManager moonManager) {
         this.plugin = plugin;
@@ -28,6 +29,8 @@ public class NightManager {
 
             if (time >= 13000) {
 
+                countedThisDay = false;
+
                 if (!countedThisNight) {
                     countedThisNight = true;
                     nightSwitch.handleNightStart();
@@ -37,9 +40,16 @@ public class NightManager {
                     moonManager.tickNight();
                 }
 
-            } else {
+            }
+            // 🌞 DAY
+            else {
+
                 countedThisNight = false;
-                nightSwitch.handleDayStart();
+
+                if (!countedThisDay) {
+                    countedThisDay = true;
+                    nightSwitch.handleDayStart();
+                }
             }
 
         }, 0L, 20L);

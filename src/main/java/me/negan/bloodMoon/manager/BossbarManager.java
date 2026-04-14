@@ -16,6 +16,7 @@ public class BossbarManager {
     private final Map<UUID, BossBar> bossBars = new HashMap<>();
     private final Map<UUID, Integer> scores = new HashMap<>();
     private final Map<UUID, Integer> inactivity = new HashMap<>();
+    // will make these configurable soon.
 
     private final int MAX_SCORE = 1000;
     private final int KILL_POINTS = 20;

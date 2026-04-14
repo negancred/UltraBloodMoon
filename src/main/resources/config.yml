@@ -1,0 +1,103 @@
+pity_system:
+  start_night: 2
+  # The first night where Blood Moon chance begins to apply.
+  # Nights before this will NEVER trigger a Blood Moon.
+
+  linear_end: 35
+  # The last night of linear scaling.
+  # From start_night → linear_end, the chance increases steadily.
+
+  maximum_nights: 45
+  # Hard cap for Blood Moon occurrence.
+  # By this night, the chance is effectively ~100%.
+
+  start_percentage: 0.001
+  # VALUES: Double (0.0 - 1.0)
+  # Initial probability at start_night.
+  # Example: 0.001 = 0.1% chance
+
+  linear_end_percentage: 0.13
+  # VALUES: Double (0.0 - 1.0)
+  # Target probability at linear_end.
+  # After this, scaling becomes exponential.
+
+
+general:
+  maximum_lightLevel_spawn: 4
+  # Values from 0 - 15
+  # Maximum light level allowed for custom mob spawning.
+  # Lower = darker areas only. Example: 4 means mobs only spawn in low light
+
+
+moons:
+  default_blood_moon:
+  # Default moon configuration (currently empty)
+
+  hallowed_moon:
+  # Hallowed moon configuration (currently empty)
+
+  arcane_moon:
+
+    mechanic_interval: 55
+    # Integer (seconds)
+    # Time between Arcane Moon mechanics triggering.
+    # Example: 60 = every 1 minute
+
+    decay:
+      duration: 10
+      # Integer (seconds)
+      # Duration of the Arcane Decay tracking window. Any healing during this time is recorded.
+
+      max_damage: 30.0
+      # Double (health points)
+      # Maximum damage that can be applied after decay.
+      # 20.0 = full health (10 hearts). Prevents excessive punishment from large heals
+
+    cripple:
+      duration: 4
+      # Integer (seconds)
+      # Duration of the active punishment phase. Movement during this time triggers penalties.
+
+      punish_duration: 8
+      # Integer (seconds)
+      # Duration of negative effects applied when punished.
+      # Includes slowness, blindness, wither, etc.
+
+      grace_period: 2
+      # Integer (seconds)
+      # Delay before cripple becomes active.
+      # Players can reposition safely during this time.
+
+
+variants:
+  zombie:
+    hp: 1.4
+    # Double (multiplier)
+    # Multiplies base zombie health
+    # Example: 1.4 = 40% more HP
+
+  skeleton:
+    hp: 1.2
+    # Double (multiplier)
+    # Multiplies base skeleton health
+
+  zombie_brute:
+    hp: 2.5
+    # Double (multiplier)
+    # Multiplies base zombie health
+
+    scale: 1.4
+    # Double (visual scale)
+    # Changes entity size
+    # 1.0 = normal size
+    # >1 = larger
+
+  spooky_archer:
+    hp: 1.4
+    # Double (multiplier)
+    # Health multiplier for spooky archer variant
+
+  spooky_skeleton:
+    hp: 1.4
+    # Double (multiplier)
+    # Health multiplier for spooky skeleton variant
