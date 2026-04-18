@@ -1,9 +1,14 @@
 package me.negan.bloodMoon.moons.types;
 
 import me.negan.bloodMoon.manager.BossbarManager;
+import me.negan.bloodMoon.manager.RewardManager;
 import me.negan.bloodMoon.moons.Moon;
 import me.negan.bloodMoon.utils.BroadcastUtil;
 import me.negan.bloodMoon.utils.SoundUtil;
+import me.negan.bloodMoon.utils.VariantUtil;
+import me.negan.bloodMoon.variants.variant.ArcaneEvoker;
+import me.negan.bloodMoon.variants.variant.ArcaneIllusioner;
+import me.negan.bloodMoon.variants.variant.ZombieVariant;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.damage.DamageSource;
@@ -24,6 +29,7 @@ public class ArcaneMoon extends Moon implements Listener {
 
     private final JavaPlugin plugin;
     private final BossbarManager bossBarManager;
+    private final RewardManager rewardManager;
     private final Random random = new Random();
 
     private int mechanicIntervalSeconds;
@@ -44,9 +50,10 @@ public class ArcaneMoon extends Moon implements Listener {
 
     private final Map<UUID, Double> healMap = new HashMap<>();
 
-    public ArcaneMoon(JavaPlugin plugin, BossbarManager bossBarManager) {
+    public ArcaneMoon(JavaPlugin plugin, BossbarManager bossBarManager, RewardManager rewardManager) {
         this.plugin = plugin;
         this.bossBarManager = bossBarManager;
+        this.rewardManager = rewardManager;
     }
 
     @Override
@@ -94,7 +101,7 @@ public class ArcaneMoon extends Moon implements Listener {
         active = false;
         HandlerList.unregisterAll(this);
 
-        bossBarManager.rewardPlayers();
+        rewardManager.rewardPlayers();
         bossBarManager.stop();
 
         List<NamespacedKey> keys = List.of(
@@ -125,19 +132,6 @@ public class ArcaneMoon extends Moon implements Listener {
     @Override
     public void onMobSpawn(LivingEntity entity) {}
 
-    @Override
-    public LivingEntity spawnMob(World world, Location loc) {
-
-        if (random.nextBoolean()) {
-            Evoker evoker = world.spawn(loc, Evoker.class);
-            me.negan.bloodMoon.variants.variant.ArcaneEvoker.apply(evoker, plugin);
-            return evoker;
-        } else {
-            Illusioner illusioner = world.spawn(loc, Illusioner.class);
-            me.negan.bloodMoon.variants.variant.ArcaneIllusioner.apply(illusioner, plugin);
-            return illusioner;
-        }
-    }
 
 
     private void startMechanicLoop() {
@@ -176,6 +170,7 @@ public class ArcaneMoon extends Moon implements Listener {
                 mechanicRunning = false;
 
                 for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (!isInOverworld(p)) continue;
                     p.playSound(
                             p.getLocation(),
                             Sound.BLOCK_BEACON_ACTIVATE,
@@ -202,6 +197,7 @@ public class ArcaneMoon extends Moon implements Listener {
 
             Player p = event.getPlayer();
 
+            if (!isInOverworld(p)) return;
             if (punished.contains(p.getUniqueId())) return;
             punished.add(p.getUniqueId());
 
@@ -227,7 +223,7 @@ public class ArcaneMoon extends Moon implements Listener {
 
             for (UUID uuid : healMap.keySet()) {
                 Player p = Bukkit.getPlayer(uuid);
-                if (p == null) continue;
+                if (p == null || !isInOverworld(p)) continue;
 
                 double healed = healMap.getOrDefault(uuid, 0.0);
                 double damage = Math.min(healed * 1.5, maxDecayDamage);
@@ -235,7 +231,7 @@ public class ArcaneMoon extends Moon implements Listener {
                 if (damage > 0) {
                     p.damage(damage);
 
-                    p.sendMessage("§5You healed §d" + String.format("%.1f", healed / 2) + "... The Arcane Moon reclaims it.");
+                    p.sendMessage("§5You healed §d" + String.format("%.1f", healed / 2) + "... §5The Arcane Moon reclaims it.");
                     p.playSound(p.getLocation(), Sound.ENTITY_EVOKER_PREPARE_ATTACK, 1f, 0.8f);
                 }
             }
@@ -250,6 +246,7 @@ public class ArcaneMoon extends Moon implements Listener {
 
         if (!active || !mechanicRunning) return;
         if (!(event.getEntity() instanceof Player player)) return;
+        if (!isInOverworld(player)) return;
 
         healMap.put(
                 player.getUniqueId(),
@@ -286,9 +283,28 @@ public class ArcaneMoon extends Moon implements Listener {
             event.setCancelled(true);
         }
     }
+    private boolean isInOverworld(Player player) {
+        return player.getWorld().getEnvironment() == World.Environment.NORMAL;
+    }
+
     @Override
-    public long getSpawnInterval() {
-        return 240L;
+    public LivingEntity spawnMob(World world, Location loc) {
+
+        EntityType type = VariantUtil.pick(
+                30, EntityType.EVOKER,
+                10, EntityType.ILLUSIONER,
+                60, EntityType.ZOMBIE
+        );
+
+        LivingEntity entity = (LivingEntity) world.spawnEntity(loc, type);
+
+        switch (type) {
+            case EVOKER -> ArcaneEvoker.apply((Evoker) entity, plugin);
+            case ILLUSIONER -> ArcaneIllusioner.apply((Illusioner) entity, plugin);
+            case ZOMBIE -> ZombieVariant.apply((Zombie) entity, plugin);
+        }
+
+        return entity;
     }
 
 }

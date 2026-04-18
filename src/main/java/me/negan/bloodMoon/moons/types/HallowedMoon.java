@@ -1,6 +1,7 @@
 package me.negan.bloodMoon.moons.types;
 
 import me.negan.bloodMoon.manager.BossbarManager;
+import me.negan.bloodMoon.manager.RewardManager;
 import me.negan.bloodMoon.moons.Moon;
 import me.negan.bloodMoon.utils.BroadcastUtil;
 import me.negan.bloodMoon.utils.SoundUtil;
@@ -19,10 +20,11 @@ public class HallowedMoon extends Moon {
 
     private final JavaPlugin plugin;
     private final BossbarManager bossBarManager;
-
-    public HallowedMoon(JavaPlugin plugin, BossbarManager bossBarManager) {
+    private final RewardManager rewardManager;
+    public HallowedMoon(JavaPlugin plugin, BossbarManager bossBarManager, RewardManager rewardManager) {
         this.plugin = plugin;
         this.bossBarManager = bossBarManager;
+        this.rewardManager = rewardManager;
     }
 
     @Override
@@ -53,7 +55,7 @@ public class HallowedMoon extends Moon {
 
     @Override
     public void onNightEnd() {
-        bossBarManager.rewardPlayers();
+        rewardManager.rewardPlayers();
         bossBarManager.stop();
 
         List<NamespacedKey> keys = List.of(

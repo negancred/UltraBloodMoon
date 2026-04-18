@@ -9,7 +9,7 @@ public class SpawnUtil {
     public static boolean isSpawnable(Location loc, int attempt, JavaPlugin plugin) {
 
         if (loc == null) {
-            log(attempt, "spawn position is NULL");
+            //log(attempt, "spawn position is NULL");
             return false;
         }
 
@@ -17,28 +17,33 @@ public class SpawnUtil {
 
         Location groundLoc = loc.clone().subtract(0, 1, 0);
         Block ground = groundLoc.getBlock();
+        Material groundType = ground.getType();
 
-        if (!ground.getType().isSolid()) {
-            log(attempt, "no solid ground at " + format(loc));
+        if (!groundType.isSolid()) {
             return false;
         }
+
+        if (isInvalidGround(groundType)) {
+            return false;
+        }
+
         if (!loc.getBlock().isEmpty() || !loc.clone().add(0, 1, 0).getBlock().isEmpty()) {
-            log(attempt, "not enough space at " + format(loc));
+            //log(attempt, "not enough space at " + format(loc));
             return false;
         }
         if (!world.isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) {
-            log(attempt, "chunk not loaded at " + format(loc));
+            //log(attempt, "chunk not loaded at " + format(loc));
             return false;
         }
 
         if (loc.getBlock().isLiquid()) {
-            log(attempt, "fluid at " + format(loc));
+            //log(attempt, "fluid at " + format(loc));
             return false;
         }
 
         Block below = loc.clone().subtract(0, 1, 0).getBlock();
         if (!below.getType().isSolid()) {
-            log(attempt, "no solid block below " + format(loc));
+            //log(attempt, "no solid block below " + format(loc));
             return false;
         }
 
@@ -48,17 +53,26 @@ public class SpawnUtil {
                         loc.clone().add(0, 1, 0).getBlock().isEmpty();
 
         if (!hasSpace) {
-            log(attempt, "not enough space at " + format(loc));
+            //log(attempt, "not enough space at " + format(loc));
             return false;
         }
 
         int light = loc.getBlock().getLightLevel();
         if (light > plugin.getConfig().getInt("general.maximum_lightLevel_spawn")) {
-            log(attempt, "light level too high (" + light + ") at " + format(loc));
+            //log(attempt, "light level too high (" + light + ") at " + format(loc));
             return false;
         }
 
         return true;
+    }
+
+    private static boolean isInvalidGround(Material mat) {
+        return mat.name().endsWith("_LEAVES")
+                || mat.name().endsWith("_STAIRS")
+                || mat == Material.CACTUS
+                || mat == Material.GLASS
+                || mat == Material.TINTED_GLASS
+                || mat == Material.BEDROCK;
     }
 
     private static void log(int attempt, String msg) {

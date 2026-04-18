@@ -6,6 +6,7 @@ import me.negan.bloodMoon.listeners.SpookyHitListener;
 import me.negan.bloodMoon.manager.BossbarManager;
 import me.negan.bloodMoon.manager.NightManager;
 import me.negan.bloodMoon.manager.DataManager;
+import me.negan.bloodMoon.manager.RewardManager;
 import me.negan.bloodMoon.moons.MoonManager;
 import me.negan.bloodMoon.utils.NightSwitchUtil;
 import me.negan.bloodMoon.utils.SleepBlockUtil;
@@ -21,22 +22,36 @@ public class BloodMoon extends JavaPlugin {
     private DataManager dataManager;
     private MoonManager moonManager;
     private BossbarManager bossBarManager;
+    private RewardManager rewardManager;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        getLogger().info("ULTRA BLOOD MOON v1.1.2 BETA by: POLACREDE");
+        getLogger().info("ULTRA BLOOD MOON v1.1.3 BETA by: POLACREDE");
 
         dataManager = new DataManager(this);
-        moonManager = new MoonManager(this);
+
+        rewardManager = new RewardManager(this, null);
+        bossBarManager = new BossbarManager(this, rewardManager);
+        moonManager = new MoonManager(this, bossBarManager, rewardManager);
+
+
+        rewardManager.setMoonManager(moonManager);
+        moonManager.setRewardManager(rewardManager);
+
         nightSwitch = new NightSwitchUtil(this, dataManager, moonManager);
         nightManager = new NightManager(this, nightSwitch, moonManager);
-        bossBarManager = new BossbarManager(this);
 
         nightManager.start();
 
+
         Objects.requireNonNull(getCommand("bloodmoon"))
-                .setExecutor(new BloodMoonCommand(nightSwitch, this));
+                .setExecutor(new BloodMoonCommand(
+                        nightSwitch,
+                        this,
+                        rewardManager,
+                        bossBarManager
+                ));
 
         VariantManager variantManager = new VariantManager(this, nightSwitch);
         variantManager.start();
@@ -52,7 +67,7 @@ public class BloodMoon extends JavaPlugin {
         );
 
         getServer().getPluginManager().registerEvents(
-                new BossbarListener(bossBarManager, this, nightSwitch),
+                new BossbarListener(bossBarManager, rewardManager, this, nightSwitch),
                 this
         );
     }

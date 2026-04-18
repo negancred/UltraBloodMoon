@@ -1,6 +1,8 @@
 package me.negan.bloodMoon.moons;
 
 import me.negan.bloodMoon.BloodMoon;
+import me.negan.bloodMoon.manager.BossbarManager;
+import me.negan.bloodMoon.manager.RewardManager;
 import me.negan.bloodMoon.moons.types.ArcaneMoon;
 import me.negan.bloodMoon.moons.types.DefaultBloodMoon;
 import me.negan.bloodMoon.moons.types.HallowedMoon;
@@ -11,18 +13,28 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Random;
 
 public class MoonManager {
+    private final BossbarManager bossBarManager;
+    private RewardManager rewardManager;
 
     private Moon currentMoon;
     private final Random random = new Random();
 
     private final BloodMoon plugin;
 
-    public MoonManager(BloodMoon plugin) {
+    public MoonManager(BloodMoon plugin,
+                       BossbarManager bossBarManager,
+                       RewardManager rewardManager) {
+
         this.plugin = plugin;
+        this.bossBarManager = bossBarManager;
+        this.rewardManager = rewardManager;
+    }
+    public void setRewardManager(RewardManager rewardManager) {
+        this.rewardManager = rewardManager;
     }
 
     public void startNight() {
-
+        System.out.println("Blood Moon STARTED");
         if (currentMoon == null) {
             currentMoon = pickMoon();
         }
@@ -41,6 +53,10 @@ public class MoonManager {
     public void endNight() {
         if (currentMoon != null) {
             currentMoon.onNightEnd();
+
+            rewardManager.rewardPlayers();
+            rewardManager.resetScores();
+
             currentMoon = null;
         }
     }
@@ -52,14 +68,15 @@ public class MoonManager {
     }
 
     private Moon pickMoon() {
-        int roll = random.nextInt(3);
+        int roll = random.nextInt(100) + 1;
 
-        return switch (roll) {
-            case 0 -> new DefaultBloodMoon(plugin, plugin.getBossBarManager());
-            case 1 -> new HallowedMoon(plugin, plugin.getBossBarManager());
-            case 2 -> new ArcaneMoon(plugin, plugin.getBossBarManager());
-            default -> new DefaultBloodMoon(plugin, plugin.getBossBarManager());
-        };
+        if (roll <= 80) {
+            return new DefaultBloodMoon(plugin, bossBarManager, rewardManager);
+        } else if (roll <= 95) {
+            return new HallowedMoon(plugin, bossBarManager, rewardManager);
+        } else {
+            return new ArcaneMoon(plugin, bossBarManager, rewardManager);
+        }
     }
 
     public Moon getCurrentMoon() {
@@ -72,5 +89,8 @@ public class MoonManager {
 
         currentMoon = moon;
         //currentMoon.onNightStart();
+    }
+    public boolean isBloodMoonActive() {
+        return currentMoon != null;
     }
 }

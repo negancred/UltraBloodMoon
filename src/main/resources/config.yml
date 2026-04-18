@@ -12,19 +12,16 @@ pity_system:
   # By this night, the chance is effectively ~100%.
 
   start_percentage: 0.001
-  # VALUES: Double (0.0 - 1.0)
   # Initial probability at start_night.
   # Example: 0.001 = 0.1% chance
 
   linear_end_percentage: 0.13
-  # VALUES: Double (0.0 - 1.0)
   # Target probability at linear_end.
   # After this, scaling becomes exponential.
 
 
 general:
   maximum_lightLevel_spawn: 4
-  # Values from 0 - 15
   # Maximum light level allowed for custom mob spawning.
   # Lower = darker areas only. Example: 4 means mobs only spawn in low light
 
@@ -39,23 +36,19 @@ moons:
   arcane_moon:
 
     mechanic_interval: 55
-    # Integer (seconds)
     # Time between Arcane Moon mechanics triggering.
     # Example: 60 = every 1 minute
 
     decay:
       duration: 10
-      # Integer (seconds)
       # Duration of the Arcane Decay tracking window. Any healing during this time is recorded.
 
       max_damage: 30.0
-      # Double (health points)
       # Maximum damage that can be applied after decay.
       # 20.0 = full health (10 hearts). Prevents excessive punishment from large heals
 
     cripple:
       duration: 4
-      # Integer (seconds)
       # Duration of the active punishment phase. Movement during this time triggers penalties.
 
       punish_duration: 8

@@ -1,0 +1,8 @@
+name: BloodMoon
+version: '1.1.2'
+main: me.negan.bloodMoon.BloodMoon
+api-version: '1.21'
+commands:
+  bloodmoon:
+    description: Blood Moon commands
+    usage: /bloodmoon <force|chance>

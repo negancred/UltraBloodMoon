@@ -55,7 +55,7 @@ public class VariantManager {
 
         World world = player.getWorld();
         if (world.getEnvironment() != World.Environment.NORMAL) {
-            Bukkit.getLogger().info("[Spawn] World is not overworld. Skipping spawn.");
+            Bukkit.getLogger().info("[UltraBloodMoon] World is not overworld. Skipping spawn.");
             return;
         }
 
@@ -63,11 +63,11 @@ public class VariantManager {
         for (int i = 0; i < 6; i++) {
 
             if (getBloodMoonMobCount() >= MAX_MOBS) {
-                Bukkit.getLogger().info("[Spawn] Cap reached (70). Skipping spawn.");
+                Bukkit.getLogger().info("[UltraBloodMoon] Cap reached (70). Skipping spawn.");
                 return;
             }
 
-            int dist = 40 + random.nextInt(11);
+            int dist = 35 + random.nextInt(41);
             double angle = random.nextDouble() * Math.PI * 2;
 
             int x = player.getLocation().getBlockX() + (int) (Math.cos(angle) * dist);
@@ -77,7 +77,6 @@ public class VariantManager {
             try {
                 y = world.getHighestBlockYAt(x, z) + 1;
             } catch (Exception e) {
-                // Bukkit.getLogger().info("Attempt " + i + ": height error " + e.getMessage());
                 continue;
             }
 
@@ -99,13 +98,20 @@ public class VariantManager {
             );
 
             AggroUtil.targetNearestPlayer(entity, plugin, 100);
+            double distance = player.getLocation().distance(spawnLoc);
 
-            debug(spawnLoc, entity.getType().name());
+            Bukkit.getLogger().info(
+                    "[UltraBloodMoon] Spawned " + entity.getType().name() + " " +
+                            String.format("%.2f", distance) +
+                            " blocks away from " + player.getName()
+            );
+
+            //debug(spawnLoc, entity.getType().name());
 
             return;
         }
 
-        Bukkit.getLogger().info("[Spawn] Failed all attempts for " + player.getName());
+        Bukkit.getLogger().info("[UltraBloodMoon] Failed all attempts for " + player.getName());
     }
 
     private int getBloodMoonMobCount() {
@@ -129,7 +135,7 @@ public class VariantManager {
         if (!debug) return;
 
         Bukkit.getLogger().info(
-                "[DefaultBloodMoon] " + type + " at " +
+                "[UltraBloodMoon] " + type + " at " +
                         loc.getBlockX() + " " +
                         loc.getBlockY() + " " +
                         loc.getBlockZ()
