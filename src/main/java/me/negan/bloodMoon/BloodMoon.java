@@ -27,7 +27,7 @@ public class BloodMoon extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        getLogger().info("ULTRA BLOOD MOON v1.1.3 BETA by: POLACREDE");
+        getLogger().info("ULTRA BLOOD MOON v1.2.0 BETA by: POLACREDE");
 
         dataManager = new DataManager(this);
 
