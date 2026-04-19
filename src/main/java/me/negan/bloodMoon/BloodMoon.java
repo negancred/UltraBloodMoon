@@ -2,6 +2,7 @@ package me.negan.bloodMoon;
 
 import me.negan.bloodMoon.commands.BloodMoonCommand;
 import me.negan.bloodMoon.listeners.BossbarListener;
+import me.negan.bloodMoon.listeners.SpookRevealListener;
 import me.negan.bloodMoon.listeners.SpookyHitListener;
 import me.negan.bloodMoon.manager.BossbarManager;
 import me.negan.bloodMoon.manager.NightManager;
@@ -27,7 +28,7 @@ public class BloodMoon extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        getLogger().info("ULTRA BLOOD MOON v1.2.0 BETA by: POLACREDE");
+        getLogger().info("ULTRA BLOOD MOON v1.3.0 BETA by: POLACREDE");
 
         dataManager = new DataManager(this);
 
@@ -62,10 +63,11 @@ public class BloodMoon extends JavaPlugin {
         );
 
         getServer().getPluginManager().registerEvents(
-                new SpookyHitListener(this),
-                this
+                new SpookyHitListener(this), this
         );
-
+        getServer().getPluginManager().registerEvents(
+                new SpookRevealListener(this), this
+        );
         getServer().getPluginManager().registerEvents(
                 new BossbarListener(bossBarManager, rewardManager, this, nightSwitch),
                 this

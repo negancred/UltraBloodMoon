@@ -5,6 +5,8 @@ import me.negan.bloodMoon.manager.RewardManager;
 import me.negan.bloodMoon.moons.Moon;
 import me.negan.bloodMoon.utils.BroadcastUtil;
 import me.negan.bloodMoon.utils.SoundUtil;
+import me.negan.bloodMoon.utils.VariantUtil;
+import me.negan.bloodMoon.variants.variant.Spook;
 import me.negan.bloodMoon.variants.variant.SpookyArcher;
 import me.negan.bloodMoon.variants.variant.SpookySkeleton;
 import org.bukkit.*;
@@ -60,7 +62,8 @@ public class HallowedMoon extends Moon {
 
         List<NamespacedKey> keys = List.of(
                 new NamespacedKey(plugin, "spooky_skeleton"),
-                new NamespacedKey(plugin, "spooky_archer")
+                new NamespacedKey(plugin, "spooky_archer"),
+                new NamespacedKey(plugin, "spook")
         );
 
         for (World world : Bukkit.getWorlds()) {
@@ -89,12 +92,16 @@ public class HallowedMoon extends Moon {
 
         Skeleton skeleton = world.spawn(loc, Skeleton.class);
 
-        int roll = new java.util.Random().nextInt(100);
+        int variant = VariantUtil.pick(
+                25, 0,   // spook
+                30, 1,  // archer
+                45, 2   // spooky skele
+        );
 
-        if (roll < 10) {
-            SpookyArcher.apply(skeleton, plugin);
-        } else {
-            SpookySkeleton.apply(skeleton, plugin);
+        switch (variant) {
+            case 0 -> Spook.apply(skeleton, plugin);
+            case 1 -> SpookyArcher.apply(skeleton, plugin);
+            case 2 -> SpookySkeleton.apply(skeleton, plugin);
         }
 
         return skeleton;
