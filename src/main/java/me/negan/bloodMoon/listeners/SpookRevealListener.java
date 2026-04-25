@@ -43,8 +43,10 @@ public class SpookRevealListener implements Listener {
                             continue;
                         }
 
-                        boolean nearBlock = isNearSoulLight(skeleton.getLocation(), 13);
-                        boolean nearPlayerSoul = isNearPlayerWithSoul(skeleton, 6);
+                        int soulRadius = plugin.getConfig().getInt("spook.reveal.soul_light_radius", 13);
+                        int playerRadius = plugin.getConfig().getInt("spook.reveal.player_soul_radius", 6);
+                        boolean nearBlock = isNearSoulLight(skeleton.getLocation(), soulRadius);
+                        boolean nearPlayerSoul = isNearPlayerWithSoul(skeleton, playerRadius);
 
                         boolean reveal = nearBlock || nearPlayerSoul;
 

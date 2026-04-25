@@ -1,96 +1,89 @@
+# This pity system increases the chance of a Blood Moon the longer it hasn't occurred.
+#
+# HOW IT WORKS:
+#
+# 1. Before start_night:
+#    - Blood Moon chance is ALWAYS 0%.
+#
+# 2. From start_night -> linear_end:
+#    - Chance increases LINEARLY.
+#    - Starts at start_percentage
+#    - Ends at linear_end_percentage
+#
+# 3. After linear_end -> maximum_nights:
+#    - Chance increases EXPONENTIALLY.
+#
+# 4. At maximum_nights:
+#    - Blood Moon is essentially GUARANTEED (~100% chance).
+#
+# NOTES:
+# - start_percentage should be very low (e.g. 0.001 = 0.1%)
+# - linear_end_percentage controls how fast early progression feels
+# - maximum_nights controls the "pity cap" (no more bad luck)
+#
+# Example Flow:
+# Night 1–1  -> 0%
+# Night 2    -> 0.1%
+# Night 20   -> gradually increasing
+# Night 35   -> ~13%
+# Night 45   -> ~100%
+# =========================
+
 pity_system:
-  start_night: 2
-  # The first night where Blood Moon chance begins to apply.
-  # Nights before this will NEVER trigger a Blood Moon.
-
-  linear_end: 35
-  # The last night of linear scaling.
-  # From start_night → linear_end, the chance increases steadily.
-
-  maximum_nights: 45
-  # Hard cap for Blood Moon occurrence.
-  # By this night, the chance is effectively ~100%.
-
-  start_percentage: 0.001
-  # Initial probability at start_night.
-  # Example: 0.001 = 0.1% chance
-
-  linear_end_percentage: 0.13
-  # Target probability at linear_end.
-  # After this, scaling becomes exponential.
+  start_night: 2 # First night where Blood Moon can occur. Nights before these will not spawn a blood moon.
+  linear_end: 35 # Night where linear scaling stops
+  maximum_nights: 45 # Guaranteed Blood Moon by this night (~100% chance)
+  start_percentage: 0.001 # Starting chance at start_night (0.001 = 0.1%)
+  linear_end_percentage: 0.13 # Chance at linear_end before exponential scaling
 
 
 general:
-  maximum_lightLevel_spawn: 4
-  # Maximum light level allowed for custom mob spawning.
-  # Lower = darker areas only. Example: 4 means mobs only spawn in low light
+  maximum_lightLevel_spawn: 4 # Max light level allowed for variant mob spawning
 
 
 moons:
-  default_blood_moon:
-  # Default moon configuration (currently empty)
+  default_blood_moon: {} # Default moon (no special mechanics)
 
-  hallowed_moon:
-  # Hallowed moon configuration (currently empty)
+  hallowed_moon: {} # Hallowed moon (no special mechanics)
 
   arcane_moon:
-
-    mechanic_interval: 55
-    # Time between Arcane Moon mechanics triggering.
-    # Example: 60 = every 1 minute
+    mechanic_interval: 55 # Interval between arcane mechanics (seconds depending on usage)
 
     decay:
-      duration: 10
-      # Duration of the Arcane Decay tracking window. Any healing during this time is recorded.
-
-      max_damage: 30.0
-      # Maximum damage that can be applied after decay.
-      # 20.0 = full health (10 hearts). Prevents excessive punishment from large heals
+      duration: 10 # Time window to track healing
+      max_damage: 30.0 # Max damage applied after decay
 
     cripple:
-      duration: 4
-      # Duration of the active punishment phase. Movement during this time triggers penalties.
-
-      punish_duration: 8
-      # Integer (seconds)
-      # Duration of negative effects applied when punished.
-      # Includes slowness, blindness, wither, etc.
-
-      grace_period: 2
-      # Integer (seconds)
-      # Delay before cripple becomes active.
-      # Players can reposition safely during this time.
+      duration: 4 # Active phase duration
+      punish_duration: 8 # Duration of applied negative effects
+      grace_period: 2 # Delay before cripple activates
 
 
 variants:
   zombie:
     hp: 1.4
-    # Double (multiplier)
-    # Multiplies base zombie health
-    # Example: 1.4 = 40% more HP
 
   skeleton:
     hp: 1.2
-    # Double (multiplier)
-    # Multiplies base skeleton health
 
   zombie_brute:
-    hp: 2.5
-    # Double (multiplier)
-    # Multiplies base zombie health
-
-    scale: 1.4
-    # Double (visual scale)
-    # Changes entity size
-    # 1.0 = normal size
-    # >1 = larger
+    hp: 75.0 # Base health
+    scale: 1.4 # Size multiplier
 
   spooky_archer:
-    hp: 1.4
-    # Double (multiplier)
-    # Health multiplier for spooky archer variant
+    hp: 1.4 # Health multiplier
 
   spooky_skeleton:
     hp: 1.4
-    # Double (multiplier)
-    # Health multiplier for spooky skeleton variant
+
+  spook:
+    hp: 1.2
+    reveal:
+      soul_light_radius: 13 # Radius to detect soul light blocks
+      player_soul_radius: 6 # Radius to detect players holding soul items
+
+  arcane_evoker:
+    hp: 2.0
+
+  arcane_illusioner:
+    hp: 2.0

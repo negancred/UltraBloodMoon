@@ -11,6 +11,7 @@ import java.util.Objects;
 public class ArcaneEvoker {
 
     public static void apply(Evoker evoker, JavaPlugin plugin) {
+        double multiplier = plugin.getConfig().getDouble("variants.arcane_evoker.hp", 2.0);
 
         NamespacedKey key = new NamespacedKey(plugin, "arcane_evoker");
         NamespacedKey moonMobKey = new NamespacedKey(plugin, "moon_mob");
@@ -26,8 +27,6 @@ public class ArcaneEvoker {
                 PersistentDataType.BYTE,
                 (byte) 1
         );
-
-        double multiplier = 2.0;
 
         if (evoker.getAttribute(Attribute.MAX_HEALTH) != null) {
             double base = Objects.requireNonNull(evoker.getAttribute(Attribute.MAX_HEALTH)).getBaseValue();

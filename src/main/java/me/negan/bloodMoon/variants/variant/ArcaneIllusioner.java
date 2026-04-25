@@ -11,6 +11,7 @@ import java.util.Objects;
 public class ArcaneIllusioner {
 
     public static void apply(Illusioner illusioner, JavaPlugin plugin) {
+        double multiplier = plugin.getConfig().getDouble("variants.arcane_illusioner.hp", 2.0);
 
         NamespacedKey key = new NamespacedKey(plugin, "arcane_illusioner");
         NamespacedKey moonMobKey = new NamespacedKey(plugin, "moon_mob");
@@ -26,8 +27,6 @@ public class ArcaneIllusioner {
                 PersistentDataType.BYTE,
                 (byte) 1
         );
-
-        double multiplier = 2.0;
 
         if (illusioner.getAttribute(Attribute.MAX_HEALTH) != null) {
             double base = Objects.requireNonNull(illusioner.getAttribute(Attribute.MAX_HEALTH)).getBaseValue();

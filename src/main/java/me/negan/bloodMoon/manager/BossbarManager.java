@@ -60,6 +60,7 @@ public class BossbarManager {
         if (currentTitle == null || currentColor == null) return;
         if (!isOverworld(player)) return;
 
+
         BossBar bar = bossBars.get(player.getUniqueId());
 
         if (bar == null) {

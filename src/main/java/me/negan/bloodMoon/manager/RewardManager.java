@@ -2,7 +2,9 @@ package me.negan.bloodMoon.manager;
 
 import me.negan.bloodMoon.moons.MoonManager;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,10 +25,11 @@ public class RewardManager {
     private final int INACTIVITY_PENALTY = 20;
 
     private MoonManager moonManager;
-
-    public RewardManager(JavaPlugin plugin, MoonManager moonManager) {
+    private BossbarManager bossbarManager;
+    public RewardManager(JavaPlugin plugin, MoonManager moonManager, BossbarManager bossbarManager) {
         this.plugin = plugin;
         this.moonManager = moonManager;
+        this.bossbarManager = bossbarManager;
         startInactivityTask();
     }
 
@@ -51,8 +54,8 @@ public class RewardManager {
     }
 
 
-    public void addKill(Player player) {
-        modifyScore(player, KILL_POINTS);
+    public void addKill(Player player, int points) {
+        modifyScore(player, points / 2);
         inactivity.put(player.getUniqueId(), 0);
     }
 
@@ -78,6 +81,7 @@ public class RewardManager {
         inactivity.clear();
     }
     public void rewardPlayers() {
+        System.out.println("RewardManager: Rewarding players...");
         for (UUID id : scores.keySet()) {
 
             Player player = Bukkit.getPlayer(id);
@@ -94,15 +98,18 @@ public class RewardManager {
             int totalXP = player.getTotalExperience();
             double bonusXP = Math.log(totalXP + 1) * 5;
 
-            int xp = (int) ((score * 0.8 * dayMultiplier) + bonusXP);
+            int xp = (int) (((score * 0.8 * dayMultiplier) + bonusXP) * 2);
             xp = Math.max(5, xp);
 
             player.giveExp(xp);
 
-            player.sendActionBar(Component.text(
-                    "§a+" + xp + " XP §7(Score: " + score +
-                            ", Day x" + String.format("%.2f", dayMultiplier) + ")"
-            ));
+            player.sendMessage(
+                    Component.text("You earned ")
+                            .color(NamedTextColor.GREEN)
+                            .append(Component.text(xp + " XP").color(NamedTextColor.GOLD))
+                            .append(Component.text(" from the blood moon!").color(NamedTextColor.GREEN))
+            );
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
         }
     }
 
@@ -113,6 +120,9 @@ public class RewardManager {
 
             for (UUID id : scores.keySet()) {
 
+                Player player = Bukkit.getPlayer(id);
+                if (player == null) continue;
+
                 int time = inactivity.getOrDefault(id, 0) + 1;
                 inactivity.put(id, time);
 
@@ -120,12 +130,15 @@ public class RewardManager {
                     int newScore = clampScore(scores.getOrDefault(id, 0) - INACTIVITY_PENALTY);
                     scores.put(id, newScore);
                     inactivity.put(id, 0);
+
+                    if (bossbarManager != null) {
+                        bossbarManager.updateBossBar(player);
+                    }
                 }
             }
 
         }, 20L, 20L);
     }
-
 
     private boolean isBloodMoonActive() {
         return moonManager != null && moonManager.isBloodMoonActive();

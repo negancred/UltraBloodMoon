@@ -1,13 +1,8 @@
 package me.negan.bloodMoon;
 
 import me.negan.bloodMoon.commands.BloodMoonCommand;
-import me.negan.bloodMoon.listeners.BossbarListener;
-import me.negan.bloodMoon.listeners.SpookRevealListener;
-import me.negan.bloodMoon.listeners.SpookyHitListener;
-import me.negan.bloodMoon.manager.BossbarManager;
-import me.negan.bloodMoon.manager.NightManager;
-import me.negan.bloodMoon.manager.DataManager;
-import me.negan.bloodMoon.manager.RewardManager;
+import me.negan.bloodMoon.listeners.*;
+import me.negan.bloodMoon.manager.*;
 import me.negan.bloodMoon.moons.MoonManager;
 import me.negan.bloodMoon.utils.NightSwitchUtil;
 import me.negan.bloodMoon.utils.SleepBlockUtil;
@@ -24,15 +19,16 @@ public class BloodMoon extends JavaPlugin {
     private MoonManager moonManager;
     private BossbarManager bossBarManager;
     private RewardManager rewardManager;
+    private UpdateManager updateManager;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        getLogger().info("ULTRA BLOOD MOON v1.3.0 BETA by: POLACREDE");
+        getLogger().info("ULTRA BLOOD MOON v1.3.1-BETA by: POLACREDE");
 
         dataManager = new DataManager(this);
 
-        rewardManager = new RewardManager(this, null);
+        rewardManager = new RewardManager(this, null, bossBarManager);
         bossBarManager = new BossbarManager(this, rewardManager);
         moonManager = new MoonManager(this, bossBarManager, rewardManager);
 
@@ -72,6 +68,17 @@ public class BloodMoon extends JavaPlugin {
                 new BossbarListener(bossBarManager, rewardManager, this, nightSwitch),
                 this
         );
+        getServer().getPluginManager().registerEvents(
+                new VariantSpawnListener(this, dataManager), this
+        );
+
+        getServer().getPluginManager().registerEvents(
+                new LightningControlListener(nightSwitch),
+                this
+        );
+
+        updateManager = new UpdateManager(this);
+        updateManager.checkForUpdates();
     }
 
     @Override

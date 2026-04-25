@@ -62,7 +62,7 @@ public class ScoreCommand implements CommandExecutor {
                 rewardManager.setScore(target, amount);
                 bossBarManager.updateBossBar(target);
 
-                sender.sendMessage("§aSet §e" + target.getName() + "§a's score to §e" + amount);
+                sender.sendMessage("§7Set §e" + target.getName() + "§7's score to §e" + amount);
             }
 
             default -> sender.sendMessage("§cInvalid action. Use add or set.");

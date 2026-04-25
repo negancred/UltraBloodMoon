@@ -7,14 +7,20 @@ import me.negan.bloodMoon.utils.BroadcastUtil;
 import me.negan.bloodMoon.utils.SoundUtil;
 import me.negan.bloodMoon.variants.variant.ZombieBrute;
 import me.negan.bloodMoon.variants.variant.ZombieVariant;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Duration;
 import java.util.Random;
 
 public class DefaultBloodMoon extends Moon {
@@ -48,15 +54,28 @@ public class DefaultBloodMoon extends Moon {
         };
 
         BroadcastUtil.broadcastRandom(messages);
+
         SoundUtil.playGlobalSound(Sound.ENTITY_ENDER_DRAGON_GROWL, 0.8f, 0.6f);
         SoundUtil.playGlobalSound(Sound.ENTITY_WITHER_SPAWN, 0.6f, 1.2f);
 
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.showTitle(
+                    Title.title(
+                            Component.text("Blood Moon").color(NamedTextColor.RED),
+                            Component.text("Zombies will spawn in massive hordes.").color(NamedTextColor.DARK_RED),
+                            Title.Times.times(
+                                    Duration.ofMillis(500),
+                                    Duration.ofSeconds(3),
+                                    Duration.ofMillis(1000)
+                            )
+                    )
+            );
+        }
+
         bossBarManager.start(BarColor.RED, "§cBlood Moon");
     }
-
     @Override
     public void onNightEnd() {
-        rewardManager.rewardPlayers();
         bossBarManager.stop();
     }
 

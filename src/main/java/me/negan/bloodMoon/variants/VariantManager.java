@@ -97,7 +97,10 @@ public class VariantManager {
                     (byte) 1
             );
 
-            AggroUtil.targetNearestPlayer(entity, plugin, 100);
+            if (random.nextBoolean()) {
+                AggroUtil.targetNearestPlayer(entity, plugin, 100);
+            }
+
             double distance = player.getLocation().distance(spawnLoc);
 
             Bukkit.getLogger().info(
@@ -106,7 +109,6 @@ public class VariantManager {
                             " blocks away from " + player.getName()
             );
 
-            //debug(spawnLoc, entity.getType().name());
 
             return;
         }

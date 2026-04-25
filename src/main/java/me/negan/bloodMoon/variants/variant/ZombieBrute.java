@@ -22,19 +22,19 @@ public class ZombieBrute {
                 (byte) 1
         );
 
-        double hpMultiplier = plugin.getConfig().getDouble("variants.zombie_brute.hp", 2.5);
+        double flatHealth = plugin.getConfig().getDouble("variants.zombie_brute.hp", 100.0);
         double scale = plugin.getConfig().getDouble("variants.zombie_brute.scale", 1.4);
+
 
         if (zombie.getAttribute(Attribute.SCALE) != null) {
             Objects.requireNonNull(zombie.getAttribute(Attribute.SCALE)).setBaseValue(scale);
         }
 
-        if (zombie.getAttribute(Attribute.MAX_HEALTH) != null) {
-            double base = Objects.requireNonNull(zombie.getAttribute(Attribute.MAX_HEALTH)).getBaseValue();
-            double newHealth = base * hpMultiplier;
 
-            Objects.requireNonNull(zombie.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(newHealth);
-            zombie.setHealth(newHealth);
+        if (zombie.getAttribute(Attribute.MAX_HEALTH) != null) {
+            Objects.requireNonNull(zombie.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(100.0);
+            zombie.setHealth(flatHealth);
+
         }
 
         zombie.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_AXE));
@@ -49,5 +49,10 @@ public class ZombieBrute {
             double baseDamage = Objects.requireNonNull(zombie.getAttribute(Attribute.ATTACK_DAMAGE)).getBaseValue();
             Objects.requireNonNull(zombie.getAttribute(Attribute.ATTACK_DAMAGE)).setBaseValue(baseDamage * 1.5);
         }
+
     }
 }
+
+
+
+

@@ -9,6 +9,9 @@ import me.negan.bloodMoon.utils.VariantUtil;
 import me.negan.bloodMoon.variants.variant.ArcaneEvoker;
 import me.negan.bloodMoon.variants.variant.ArcaneIllusioner;
 import me.negan.bloodMoon.variants.variant.ZombieVariant;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.damage.DamageSource;
@@ -23,6 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.time.Duration;
 import java.util.*;
 
 public class ArcaneMoon extends Moon implements Listener {
@@ -89,6 +93,19 @@ public class ArcaneMoon extends Moon implements Listener {
         };
 
         BroadcastUtil.broadcastRandom(messages);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.showTitle(
+                    Title.title(
+                            Component.text("Arcane Moon").color(NamedTextColor.LIGHT_PURPLE),
+                            Component.text("Spellcasters rise..").color(NamedTextColor.DARK_PURPLE),
+                            Title.Times.times(
+                                    Duration.ofMillis(500),
+                                    Duration.ofSeconds(3),
+                                    Duration.ofMillis(1000)
+                            )
+                    )
+            );
+        }
         bossBarManager.start(BarColor.PURPLE, "§5Arcane Moon");
         SoundUtil.playGlobalSound(Sound.AMBIENT_CAVE, 1.2f, 1.8f);
         SoundUtil.playGlobalSound(Sound.ENTITY_EVOKER_PREPARE_SUMMON, 1.0f, 0.7f);
@@ -101,7 +118,6 @@ public class ArcaneMoon extends Moon implements Listener {
         active = false;
         HandlerList.unregisterAll(this);
 
-        rewardManager.rewardPlayers();
         bossBarManager.stop();
 
         List<NamespacedKey> keys = List.of(

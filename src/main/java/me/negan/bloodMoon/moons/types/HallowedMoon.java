@@ -9,13 +9,18 @@ import me.negan.bloodMoon.utils.VariantUtil;
 import me.negan.bloodMoon.variants.variant.Spook;
 import me.negan.bloodMoon.variants.variant.SpookyArcher;
 import me.negan.bloodMoon.variants.variant.SpookySkeleton;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Duration;
 import java.util.List;
 
 public class HallowedMoon extends Moon {
@@ -45,7 +50,19 @@ public class HallowedMoon extends Moon {
         };
 
         BroadcastUtil.broadcastRandom(messages);
-
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.showTitle(
+                    Title.title(
+                            Component.text("Hallowed Moon").color(NamedTextColor.YELLOW),
+                            Component.text("Skeletal horrors roam the land").color(NamedTextColor.GOLD),
+                            Title.Times.times(
+                                    Duration.ofMillis(500),
+                                    Duration.ofSeconds(3),
+                                    Duration.ofMillis(1000)
+                            )
+                    )
+            );
+        }
         SoundUtil.playGlobalSound(Sound.ENTITY_WITCH_CELEBRATE, 1.0f, 1.5f);
         SoundUtil.playGlobalSound(Sound.AMBIENT_CAVE, 1.2f, 1.8f);
 
@@ -57,7 +74,6 @@ public class HallowedMoon extends Moon {
 
     @Override
     public void onNightEnd() {
-        rewardManager.rewardPlayers();
         bossBarManager.stop();
 
         List<NamespacedKey> keys = List.of(
