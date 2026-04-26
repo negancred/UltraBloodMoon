@@ -97,7 +97,8 @@ public class VariantManager {
                     (byte) 1
             );
 
-            if (random.nextBoolean()) {
+            double aggroChance = plugin.getConfig().getDouble("general.aggro-chance", 0.7);
+            if (random.nextDouble() < aggroChance) {
                 AggroUtil.targetNearestPlayer(entity, plugin, 100);
             }
 
@@ -142,11 +143,5 @@ public class VariantManager {
                         loc.getBlockY() + " " +
                         loc.getBlockZ()
         );
-    }
-    private long getCurrentInterval() {
-        var moon = nightSwitch.getMoonManager().getCurrentMoon();
-        if (moon == null) return 100L;
-
-        return moon.getSpawnInterval();
     }
 }

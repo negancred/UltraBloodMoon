@@ -42,6 +42,7 @@ public class BloodMoon extends JavaPlugin {
         nightManager.start();
 
 
+
         Objects.requireNonNull(getCommand("bloodmoon"))
                 .setExecutor(new BloodMoonCommand(
                         nightSwitch,
@@ -58,25 +59,14 @@ public class BloodMoon extends JavaPlugin {
                 this
         );
 
-        getServer().getPluginManager().registerEvents(
-                new SpookyHitListener(this), this
-        );
-        getServer().getPluginManager().registerEvents(
-                new SpookRevealListener(this), this
-        );
-        getServer().getPluginManager().registerEvents(
-                new BossbarListener(bossBarManager, rewardManager, this, nightSwitch),
-                this
-        );
-        getServer().getPluginManager().registerEvents(
-                new VariantSpawnListener(this, dataManager), this
-        );
+        getServer().getPluginManager().registerEvents(new SpookyHitListener(this), this);
+        getServer().getPluginManager().registerEvents(new SpookRevealListener(this), this);
+        getServer().getPluginManager().registerEvents(new BossbarListener(bossBarManager, rewardManager, this, nightSwitch), this);
+        getServer().getPluginManager().registerEvents(new VariantSpawnListener(this, dataManager), this);
+        getServer().getPluginManager().registerEvents(new EnvironmentControlListener(this, nightSwitch), this);
+        getServer().getPluginManager().registerEvents(new FaceZombieListener(this), this);
 
-        getServer().getPluginManager().registerEvents(
-                new LightningControlListener(nightSwitch),
-                this
-        );
-
+        new GeneralScheduler(this).start();
         updateManager = new UpdateManager(this);
         updateManager.checkForUpdates();
     }
@@ -86,7 +76,4 @@ public class BloodMoon extends JavaPlugin {
         getLogger().info("BloodMoon disabled!");
     }
 
-    public BossbarManager getBossBarManager() {
-        return bossBarManager;
-    }
 }

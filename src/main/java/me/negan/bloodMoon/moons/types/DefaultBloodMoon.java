@@ -5,6 +5,8 @@ import me.negan.bloodMoon.manager.RewardManager;
 import me.negan.bloodMoon.moons.Moon;
 import me.negan.bloodMoon.utils.BroadcastUtil;
 import me.negan.bloodMoon.utils.SoundUtil;
+import me.negan.bloodMoon.utils.VariantUtil;
+import me.negan.bloodMoon.variants.variant.FaceZombieVariant;
 import me.negan.bloodMoon.variants.variant.ZombieBrute;
 import me.negan.bloodMoon.variants.variant.ZombieVariant;
 import net.kyori.adventure.text.Component;
@@ -90,10 +92,16 @@ public class DefaultBloodMoon extends Moon {
 
         Zombie zombie = world.spawn(loc, Zombie.class);
 
-        if (random.nextInt(100) < 80) {
-            ZombieVariant.apply(zombie, plugin);
-        } else {
-            ZombieBrute.apply(zombie, plugin);
+        int variant = VariantUtil.pick(
+                75, 0,  // normal zombie
+                15, 1,  // brute
+                10, 2   // face zombie
+        );
+
+        switch (variant) {
+            case 0 -> ZombieVariant.apply(zombie, plugin);
+            case 1 -> ZombieBrute.apply(zombie, plugin);
+            case 2 -> FaceZombieVariant.apply(zombie, plugin);
         }
 
         return zombie;

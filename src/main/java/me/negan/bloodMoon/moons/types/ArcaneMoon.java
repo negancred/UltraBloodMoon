@@ -4,6 +4,7 @@ import me.negan.bloodMoon.manager.BossbarManager;
 import me.negan.bloodMoon.manager.RewardManager;
 import me.negan.bloodMoon.moons.Moon;
 import me.negan.bloodMoon.utils.BroadcastUtil;
+import me.negan.bloodMoon.utils.ParticleUtil;
 import me.negan.bloodMoon.utils.SoundUtil;
 import me.negan.bloodMoon.utils.VariantUtil;
 import me.negan.bloodMoon.variants.variant.ArcaneEvoker;
@@ -127,11 +128,20 @@ public class ArcaneMoon extends Moon implements Listener {
 
         for (World world : Bukkit.getWorlds()) {
             for (LivingEntity entity : world.getLivingEntities()) {
-
+                if (entity.isInsideVehicle()) continue;
                 for (NamespacedKey key : keys) {
                     if (entity.getPersistentDataContainer().has(key, PersistentDataType.BYTE)) {
-
-                        world.spawnParticle(Particle.SOUL, entity.getLocation(), 40);
+                        ParticleUtil.playRisingParticles(
+                                plugin,
+                                world,
+                                entity.getLocation(),
+                                Particle.SOUL,
+                                10,
+                                6,
+                                0.1, 0.05, 0.1,
+                                0.01,
+                                0.08
+                        );
                         entity.remove();
                         break;
                     }

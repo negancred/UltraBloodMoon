@@ -4,6 +4,7 @@ import me.negan.bloodMoon.manager.BossbarManager;
 import me.negan.bloodMoon.manager.RewardManager;
 import me.negan.bloodMoon.moons.Moon;
 import me.negan.bloodMoon.utils.BroadcastUtil;
+import me.negan.bloodMoon.utils.ParticleUtil;
 import me.negan.bloodMoon.utils.SoundUtil;
 import me.negan.bloodMoon.utils.VariantUtil;
 import me.negan.bloodMoon.variants.variant.Spook;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.Duration;
 import java.util.List;
@@ -54,7 +56,7 @@ public class HallowedMoon extends Moon {
             player.showTitle(
                     Title.title(
                             Component.text("Hallowed Moon").color(NamedTextColor.YELLOW),
-                            Component.text("Skeletal horrors roam the land").color(NamedTextColor.GOLD),
+                            Component.text("Horrors roam the land").color(NamedTextColor.GOLD),
                             Title.Times.times(
                                     Duration.ofMillis(500),
                                     Duration.ofSeconds(3),
@@ -84,11 +86,20 @@ public class HallowedMoon extends Moon {
 
         for (World world : Bukkit.getWorlds()) {
             for (LivingEntity entity : world.getLivingEntities()) {
-
+                if (entity.isInsideVehicle()) continue;
                 for (NamespacedKey key : keys) {
                     if (entity.getPersistentDataContainer().has(key, PersistentDataType.BYTE)) {
-
-                        world.spawnParticle(Particle.SOUL, entity.getLocation(), 20);
+                        ParticleUtil.playRisingParticles(
+                                plugin,
+                                world,
+                                entity.getLocation(),
+                                Particle.SOUL,
+                                10,
+                                6,
+                                0.1, 0.05, 0.1,
+                                0.01,
+                                0.08
+                        );
                         entity.remove();
                         break;
                     }
