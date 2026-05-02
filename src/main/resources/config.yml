@@ -38,6 +38,7 @@ pity_system:
 
 
 general:
+  console_spawn_messages: true
   maximum_lightLevel_spawn: 4 # Max light level allowed for variant mob spawning
   aggro-chance: 0.7
   show_score_on_bossbar: true

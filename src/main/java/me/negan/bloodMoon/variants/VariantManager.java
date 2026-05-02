@@ -69,7 +69,11 @@ public class VariantManager {
 
             tagBloodMoonMob(entity);
             handleAggro(entity);
-            logSpawn(player, entity, spawnLoc);
+
+            boolean isLogTrue = plugin.getConfig().getBoolean("general.console_spawn_messages", false);
+            if (isLogTrue) {
+                logSpawn(player, entity, spawnLoc);
+            }
 
             return;
         }

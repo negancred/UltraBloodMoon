@@ -26,8 +26,7 @@ public class BossbarListener implements Listener {
     private final JavaPlugin plugin;
     private final NightSwitchUtil nightSwitch;
 
-    public BossbarListener(BossbarManager bossBarManager,
-                           RewardManager rewardManager,
+    public BossbarListener(BossbarManager bossBarManager, RewardManager rewardManager,
                            JavaPlugin plugin,
                            NightSwitchUtil nightSwitch) {
 
