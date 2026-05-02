@@ -1,5 +1,7 @@
 package me.negan.bloodMoon.variants.variant;
 
+import me.negan.bloodMoon.variants.SpawnableVariant;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -11,7 +13,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Objects;
 import java.util.Random;
 
-public class ZombieVariant {
+public class ZombieVariant implements SpawnableVariant {
+    @Override
+    public String getName() {
+        return "zombie_variant";
+    }
+
+    @Override
+    public void spawn(Location loc, JavaPlugin plugin) {
+        var zombie = loc.getWorld().spawn(loc, org.bukkit.entity.Zombie.class);
+        apply(zombie, plugin);
+    }
 
     private static double chance_spawn_with_weapon = 0.4;
 
@@ -19,7 +31,7 @@ public class ZombieVariant {
 
     public static void apply(Zombie zombie, JavaPlugin plugin) {
 
-        NamespacedKey moonMobKey = new NamespacedKey(plugin, "moon_mob");
+        NamespacedKey moonMobKey = new NamespacedKey(plugin, "bloodmoon_mob");
 
         zombie.getPersistentDataContainer().set(
                 moonMobKey,

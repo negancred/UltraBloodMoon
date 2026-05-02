@@ -1,5 +1,7 @@
 package me.negan.bloodMoon.variants.variant;
 
+import me.negan.bloodMoon.variants.SpawnableVariant;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -10,11 +12,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
-public class ZombieBrute {
+public class ZombieBrute implements SpawnableVariant {
+    @Override
+    public String getName() {
+        return "zombie_brute";
+    }
+
+    @Override
+    public void spawn(Location loc, JavaPlugin plugin) {
+        var zombie = loc.getWorld().spawn(loc, org.bukkit.entity.Zombie.class);
+        apply(zombie, plugin);
+    }
 
     public static void apply(Zombie zombie, JavaPlugin plugin) {
 
-        NamespacedKey moonMobKey = new NamespacedKey(plugin, "moon_mob");
+        NamespacedKey moonMobKey = new NamespacedKey(plugin, "bloodmoon_mob");
 
         zombie.getPersistentDataContainer().set(
                 moonMobKey,

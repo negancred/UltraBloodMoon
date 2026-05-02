@@ -1,5 +1,7 @@
 package me.negan.bloodMoon.variants.variant;
 
+import me.negan.bloodMoon.variants.SpawnableVariant;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Illusioner;
@@ -8,13 +10,24 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
-public class ArcaneIllusioner {
+public class ArcaneIllusioner implements SpawnableVariant {
+    @Override
+    public String getName() {
+        return "arcane_illusioner";
+    }
+
+    @Override
+    public void spawn(Location loc, JavaPlugin plugin) {
+        var illusioner = loc.getWorld().spawn(loc, org.bukkit.entity.Illusioner.class);
+        apply(illusioner, plugin);
+    }
+
 
     public static void apply(Illusioner illusioner, JavaPlugin plugin) {
         double multiplier = plugin.getConfig().getDouble("variants.arcane_illusioner.hp", 2.0);
 
         NamespacedKey key = new NamespacedKey(plugin, "arcane_illusioner");
-        NamespacedKey moonMobKey = new NamespacedKey(plugin, "moon_mob");
+        NamespacedKey moonMobKey = new NamespacedKey(plugin, "bloodmoon_mob");
 
         illusioner.getPersistentDataContainer().set(
                 moonMobKey,

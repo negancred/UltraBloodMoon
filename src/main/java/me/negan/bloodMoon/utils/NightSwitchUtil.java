@@ -69,14 +69,7 @@ public class NightSwitchUtil {
 
         moonManager.startNight();
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            World world = Bukkit.getWorlds().get(0);
-
-            world.setStorm(true);
-            world.setThundering(true);
-            world.setWeatherDuration(10200);
-        }, 20L);
-
+        //setThunderOnBloodMoon(10200);
         dataManager.resetNights();
 
         if (forced) {
@@ -90,6 +83,16 @@ public class NightSwitchUtil {
         return bloodMoonActive;
     }
 
+    private void setThunderOnBloodMoon(int WeatherDuration){
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            World world = Bukkit.getWorlds().get(0);
+
+            world.setStorm(true);
+            world.setThundering(true);
+            world.setWeatherDuration(WeatherDuration);
+        }, 20L);
+    }
+
     public MoonManager getMoonManager() {
         return moonManager;
     }
@@ -97,6 +100,7 @@ public class NightSwitchUtil {
     public void setForceBloodMoon(boolean value) {
         this.forceBloodMoon = value;
     }
+
 
     public int getNightsSinceLastBloodMoon() {
         return dataManager.getNights();

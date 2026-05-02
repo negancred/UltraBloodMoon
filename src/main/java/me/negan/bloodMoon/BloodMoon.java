@@ -24,49 +24,69 @@ public class BloodMoon extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        getLogger().info("ULTRA BLOOD MOON v1.3.1-BETA by: POLACREDE");
+        getLogger().info("ULTRA BLOOD MOON v1.4.0-BETA by: POLACREDE");
 
+        initManagers();
+        initSystems();
+
+        startServices();
+
+        registerCommands();
+        registerListeners();
+
+        startSchedulers();
+        checkUpdates();
+    }
+
+    private void initManagers() {
         dataManager = new DataManager(this);
-
-        rewardManager = new RewardManager(this, null, bossBarManager);
+        rewardManager = new RewardManager(this);
         bossBarManager = new BossbarManager(this, rewardManager);
         moonManager = new MoonManager(this, bossBarManager, rewardManager);
+    }
 
-
-        rewardManager.setMoonManager(moonManager);
-        moonManager.setRewardManager(rewardManager);
-
+    private void initSystems() {
         nightSwitch = new NightSwitchUtil(this, dataManager, moonManager);
         nightManager = new NightManager(this, nightSwitch, moonManager);
+    }
 
+    private void startServices() {
         nightManager.start();
-
-
-
-        Objects.requireNonNull(getCommand("bloodmoon"))
-                .setExecutor(new BloodMoonCommand(
-                        nightSwitch,
-                        this,
-                        rewardManager,
-                        bossBarManager
-                ));
 
         VariantManager variantManager = new VariantManager(this, nightSwitch);
         variantManager.start();
+    }
 
-        getServer().getPluginManager().registerEvents(
-                new SleepBlockUtil(this, nightSwitch),
-                this
+    private void registerCommands() {
+        BloodMoonCommand cmd = new BloodMoonCommand(
+                nightSwitch,
+                this,
+                rewardManager,
+                bossBarManager
         );
 
-        getServer().getPluginManager().registerEvents(new SpookyHitListener(this), this);
-        getServer().getPluginManager().registerEvents(new SpookRevealListener(this), this);
-        getServer().getPluginManager().registerEvents(new BossbarListener(bossBarManager, rewardManager, this, nightSwitch), this);
-        getServer().getPluginManager().registerEvents(new VariantSpawnListener(this, dataManager), this);
-        getServer().getPluginManager().registerEvents(new EnvironmentControlListener(this, nightSwitch), this);
-        getServer().getPluginManager().registerEvents(new FaceZombieListener(this), this);
+        Objects.requireNonNull(getCommand("bloodmoon")).setExecutor(cmd);
+        Objects.requireNonNull(getCommand("bloodmoon")).setTabCompleter(cmd);
+    }
 
+    private void registerListeners() {
+        var pm = getServer().getPluginManager();
+
+        pm.registerEvents(new SleepBlockUtil(this, nightSwitch), this);
+        pm.registerEvents(new SpookyHitListener(this), this);
+        pm.registerEvents(new SpookRevealListener(this), this);
+        pm.registerEvents(new BossbarListener(bossBarManager, rewardManager, this, nightSwitch), this);
+        pm.registerEvents(new VariantSpawnListener(this, dataManager), this);
+        pm.registerEvents(new EnvironmentControlListener(this, nightSwitch), this);
+        pm.registerEvents(new FaceZombieListener(this), this);
+    }
+
+    private void startSchedulers() {
         new GeneralScheduler(this).start();
+        new ScoreScheduler(this, rewardManager, bossBarManager, moonManager).start();
+    }
+
+    private void checkUpdates() {
         updateManager = new UpdateManager(this);
         updateManager.checkForUpdates();
     }
@@ -75,5 +95,4 @@ public class BloodMoon extends JavaPlugin {
     public void onDisable() {
         getLogger().info("BloodMoon disabled!");
     }
-
 }

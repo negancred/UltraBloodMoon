@@ -40,7 +40,7 @@ pity_system:
 general:
   maximum_lightLevel_spawn: 4 # Max light level allowed for variant mob spawning
   aggro-chance: 0.7
-
+  show_score_on_bossbar: true
 
 moons:
   default_blood_moon: {} # Default moon (no special mechanics)

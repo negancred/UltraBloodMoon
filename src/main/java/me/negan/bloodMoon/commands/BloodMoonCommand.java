@@ -12,19 +12,23 @@ import me.negan.bloodMoon.utils.HelpMessageUtil;
 import me.negan.bloodMoon.utils.NightSwitchUtil;
 import org.bukkit.World;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
-public class BloodMoonCommand implements CommandExecutor {
+public class BloodMoonCommand implements TabExecutor {
 
     private final NightSwitchUtil nightSwitch;
     private final BloodMoon plugin;
     private final RewardManager rewardManager;
     private final BossbarManager bossBarManager;
     private final ScoreCommand scoreCommand;
+    private final VariantSpawnCommand variantSpawnCommand;
 
     private final Random random = new Random();
 
@@ -38,11 +42,32 @@ public class BloodMoonCommand implements CommandExecutor {
         this.rewardManager = rewardManager;
         this.bossBarManager = bossBarManager;
 
+        this.variantSpawnCommand = new VariantSpawnCommand(plugin);
         this.scoreCommand = new ScoreCommand(rewardManager, bossBarManager, nightSwitch);
+    }
+    @Override
+    public @Nullable List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+
+        if (args.length == 1) {
+            return List.of("start", "chance", "current", "score", "spawn");
+        }
+
+        if (args.length >= 2 && args[0].equalsIgnoreCase("spawn")) {
+            return variantSpawnCommand.onTabComplete(sender, command, alias, args);
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("spawn")) {
+            if (!sender.isOp()) {
+                sender.sendMessage("§cOnly operators can use this command.");
+                return true;
+            }
+            return variantSpawnCommand.onCommand(sender, command, label, args);
+        }
 
         if (args.length > 0 && args[0].equalsIgnoreCase("score")) {
 

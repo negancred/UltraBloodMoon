@@ -1,5 +1,7 @@
 package me.negan.bloodMoon.variants.variant;
 
+import me.negan.bloodMoon.variants.SpawnableVariant;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -10,12 +12,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
-public class SpookyArcher {
+public class SpookyArcher implements SpawnableVariant {
+    @Override
+    public String getName() {
+        return "spooky_archer";
+    }
+
+    @Override
+    public void spawn(Location loc, JavaPlugin plugin) {
+        var skeleton = loc.getWorld().spawn(loc, org.bukkit.entity.Skeleton.class);
+        apply(skeleton, plugin);
+    }
 
     public static void apply(Skeleton skeleton, JavaPlugin plugin) {
 
         NamespacedKey spookyKey = new NamespacedKey(plugin, "spooky_archer");
-        NamespacedKey moonMobKey = new NamespacedKey(plugin, "moon_mob");
+        NamespacedKey moonMobKey = new NamespacedKey(plugin, "bloodmoon_mob");
 
         skeleton.getPersistentDataContainer().set(
                 moonMobKey,

@@ -1,6 +1,8 @@
 package me.negan.bloodMoon.variants.variant;
 
+import me.negan.bloodMoon.variants.SpawnableVariant;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -14,11 +16,30 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.List;
 import java.util.Random;
 
-public class FaceZombieVariant {
+public class FaceZombieVariant implements SpawnableVariant{
+    @Override
+    public String getName() {
+        return "face_zombie";
+    }
+
+    @Override
+    public void spawn(Location loc, JavaPlugin plugin) {
+        var zombie = loc.getWorld().spawn(loc, org.bukkit.entity.Zombie.class);
+        apply(zombie, plugin);
+    }
+
 
     private static final Random random = new Random();
 
     public static void apply(Zombie zombie, JavaPlugin plugin) {
+
+        NamespacedKey moonMobKey = new NamespacedKey(plugin, "bloodmoon_mob");
+
+        zombie.getPersistentDataContainer().set(
+                moonMobKey,
+                PersistentDataType.BYTE,
+                (byte) 1
+        );
 
         double hpMultiplier = plugin.getConfig().getDouble("variants.face_zombie.hp", 0.9);
         NamespacedKey faceZombieKey = new NamespacedKey(plugin, "face_zombie");
@@ -40,9 +61,6 @@ public class FaceZombieVariant {
         zombie.getEquipment().setChestplate(createRedArmor(Material.LEATHER_CHESTPLATE));
         zombie.getEquipment().setLeggings(createRedArmor(Material.LEATHER_LEGGINGS));
         zombie.getEquipment().setBoots(createRedArmor(Material.LEATHER_BOOTS));
-
-
-
         ItemStack weapon;
 
         try {
@@ -52,7 +70,6 @@ public class FaceZombieVariant {
         }
 
         zombie.getEquipment().setItemInMainHand(weapon);
-
         zombie.getEquipment().setHelmetDropChance(0f);
         zombie.getEquipment().setChestplateDropChance(0f);
         zombie.getEquipment().setLeggingsDropChance(0f);

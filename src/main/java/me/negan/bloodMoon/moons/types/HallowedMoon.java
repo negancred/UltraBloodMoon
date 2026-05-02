@@ -3,10 +3,7 @@ package me.negan.bloodMoon.moons.types;
 import me.negan.bloodMoon.manager.BossbarManager;
 import me.negan.bloodMoon.manager.RewardManager;
 import me.negan.bloodMoon.moons.Moon;
-import me.negan.bloodMoon.utils.BroadcastUtil;
-import me.negan.bloodMoon.utils.ParticleUtil;
-import me.negan.bloodMoon.utils.SoundUtil;
-import me.negan.bloodMoon.utils.VariantUtil;
+import me.negan.bloodMoon.utils.*;
 import me.negan.bloodMoon.variants.variant.Spook;
 import me.negan.bloodMoon.variants.variant.SpookyArcher;
 import me.negan.bloodMoon.variants.variant.SpookySkeleton;
@@ -84,30 +81,7 @@ public class HallowedMoon extends Moon {
                 new NamespacedKey(plugin, "spook")
         );
 
-        for (World world : Bukkit.getWorlds()) {
-            for (LivingEntity entity : world.getLivingEntities()) {
-                if (entity.isInsideVehicle()) continue;
-                for (NamespacedKey key : keys) {
-                    if (entity.getPersistentDataContainer().has(key, PersistentDataType.BYTE)) {
-                        ParticleUtil.playRisingParticles(
-                                plugin,
-                                world,
-                                entity.getLocation(),
-                                Particle.SOUL,
-                                10,
-                                6,
-                                0.1, 0.05, 0.1,
-                                0.01,
-                                0.08
-                        );
-                        entity.remove();
-                        break;
-                    }
-                }
-            }
-        }
-
-
+        EntityCleanupUtil.removeTaggedEntities(plugin, keys);
     }
 
     @Override

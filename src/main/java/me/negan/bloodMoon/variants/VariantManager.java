@@ -53,68 +53,28 @@ public class VariantManager {
 
     private void spawnHostileNearPlayer(Player player) {
 
-        World world = player.getWorld();
-        if (world.getEnvironment() != World.Environment.NORMAL) {
-            Bukkit.getLogger().info("[UltraBloodMoon] World is not overworld. Skipping spawn.");
-            return;
-        }
-
+        if (!isValidWorld(player)) return;
 
         for (int i = 0; i < 6; i++) {
 
-            if (getBloodMoonMobCount() >= MAX_MOBS) {
-                Bukkit.getLogger().info("[UltraBloodMoon] Cap reached (70). Skipping spawn.");
-                return;
-            }
+            if (isMobCapReached()) return;
 
-            int dist = 35 + random.nextInt(41);
-            double angle = random.nextDouble() * Math.PI * 2;
-
-            int x = player.getLocation().getBlockX() + (int) (Math.cos(angle) * dist);
-            int z = player.getLocation().getBlockZ() + (int) (Math.sin(angle) * dist);
-
-            int y;
-            try {
-                y = world.getHighestBlockYAt(x, z) + 1;
-            } catch (Exception e) {
-                continue;
-            }
-
-            Location spawnLoc = new Location(world, x, y, z);
+            Location spawnLoc = findSpawnLocation(player);
+            if (spawnLoc == null) continue;
 
             if (!SpawnUtil.isSpawnable(spawnLoc, i, plugin)) continue;
 
-
-            var moon = nightSwitch.getMoonManager().getCurrentMoon();
-            if (moon == null) return;
-
-            LivingEntity entity = moon.spawnMob(world, spawnLoc);
+            LivingEntity entity = spawnMoonMob(spawnLoc);
             if (entity == null) return;
 
-            entity.getPersistentDataContainer().set(
-                    bloodMoonKey,
-                    PersistentDataType.BYTE,
-                    (byte) 1
-            );
-
-            double aggroChance = plugin.getConfig().getDouble("general.aggro-chance", 0.7);
-            if (random.nextDouble() < aggroChance) {
-                AggroUtil.targetNearestPlayer(entity, plugin, 100);
-            }
-
-            double distance = player.getLocation().distance(spawnLoc);
-
-            Bukkit.getLogger().info(
-                    "[UltraBloodMoon] Spawned " + entity.getType().name() + " " +
-                            String.format("%.2f", distance) +
-                            " blocks away from " + player.getName()
-            );
-
+            tagBloodMoonMob(entity);
+            handleAggro(entity);
+            logSpawn(player, entity, spawnLoc);
 
             return;
         }
 
-        Bukkit.getLogger().info("[UltraBloodMoon] Failed all attempts for " + player.getName());
+        logFailedSpawn(player);
     }
 
     private int getBloodMoonMobCount() {
@@ -143,5 +103,75 @@ public class VariantManager {
                         loc.getBlockY() + " " +
                         loc.getBlockZ()
         );
+    }
+
+    private boolean isValidWorld(Player player) {
+        if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
+            Bukkit.getLogger().info("[UltraBloodMoon] World is not overworld. Skipping spawn.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isMobCapReached() {
+        if (getBloodMoonMobCount() >= MAX_MOBS) {
+            Bukkit.getLogger().info("[UltraBloodMoon] Cap reached (70). Skipping spawn.");
+            return true;
+        }
+        return false;
+    }
+
+    private Location findSpawnLocation(Player player) {
+
+        World world = player.getWorld();
+
+        int dist = 35 + random.nextInt(41);
+        double angle = random.nextDouble() * Math.PI * 2;
+
+        int x = player.getLocation().getBlockX() + (int) (Math.cos(angle) * dist);
+        int z = player.getLocation().getBlockZ() + (int) (Math.sin(angle) * dist);
+
+        try {
+            int y = world.getHighestBlockYAt(x, z) + 1;
+            return new Location(world, x, y, z);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private LivingEntity spawnMoonMob(Location loc) {
+
+        var moon = nightSwitch.getMoonManager().getCurrentMoon();
+        if (moon == null) return null;
+
+        return moon.spawnMob(loc.getWorld(), loc);
+    }
+    private void tagBloodMoonMob(LivingEntity entity) {
+        entity.getPersistentDataContainer().set(
+                bloodMoonKey,
+                PersistentDataType.BYTE,
+                (byte) 1
+        );
+    }
+    private void handleAggro(LivingEntity entity) {
+
+        double aggroChance = plugin.getConfig().getDouble("general.aggro-chance", 0.7);
+
+        if (random.nextDouble() < aggroChance) {
+            AggroUtil.targetNearestPlayer(entity, plugin, 100);
+        }
+    }
+    private void logSpawn(Player player, LivingEntity entity, Location spawnLoc) {
+
+        double distance = player.getLocation().distance(spawnLoc);
+
+        Bukkit.getLogger().info(
+                "[UltraBloodMoon] Spawned " + entity.getType().name() + " " +
+                        String.format("%.2f", distance) +
+                        " blocks away from " + player.getName()
+        );
+    }
+    private void logFailedSpawn(Player player) {
+        Bukkit.getLogger().info("[UltraBloodMoon] Failed all attempts for " + player.getName());
     }
 }

@@ -42,9 +42,7 @@ public class ChanceManager {
         int maxNight = plugin.getConfig().getInt("pity_system.maximum_nights");
 
         int variantStart = startNight + (linearEnd - startNight) / 2;
-
         if (n < variantStart) return 0.0;
-
         double bloodMoonChance = computeBloodMoonChance(n);
 
         int range = maxNight - variantStart;

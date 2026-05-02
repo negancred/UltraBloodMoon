@@ -73,7 +73,11 @@ public class BossbarManager {
         double progress = Math.min(1.0, score / (double) MAX_SCORE);
 
         bar.setProgress(progress);
-        bar.setTitle(currentTitle + " §7Score: " + score + "/" + MAX_SCORE);
+
+        boolean showScore = plugin.getConfig().getBoolean("general.show_score_on_bossbar", true);
+        if (showScore) {
+            bar.setTitle(currentTitle + " §7Score: " + score + "/" + MAX_SCORE);
+        }
     }
 
     public void handleJoin(Player player) {
