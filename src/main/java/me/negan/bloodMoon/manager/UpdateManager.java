@@ -59,7 +59,7 @@ public class UpdateManager {
                     latestVersion = newestVersion;
 
                     plugin.getLogger().info("====================================");
-                    plugin.getLogger().info("A new BloodMoon update is available!");
+                    plugin.getLogger().info("A new Ultra Blood Moon update is available!");
                     plugin.getLogger().info("Current: " + current);
                     plugin.getLogger().info("Latest: " + newestVersion);
                     plugin.getLogger().info("Download: https://modrinth.com/plugin/ultra-blood-moon");
@@ -70,7 +70,7 @@ public class UpdateManager {
                     latestVersion = newestVersion;
 
                     plugin.getLogger().info("====================================");
-                    plugin.getLogger().info("BloodMoon is up to date!");
+                    plugin.getLogger().info("Ultra Blood Moon is up to date!");
                     plugin.getLogger().info("Version: " + current);
                     plugin.getLogger().info("====================================");
                 }
