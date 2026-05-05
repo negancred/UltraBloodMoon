@@ -1,5 +1,5 @@
 name: BloodMoon
-version: '1.4.0'
+version: '1.4.1'
 main: me.negan.bloodMoon.BloodMoon
 api-version: '1.21'
 commands:
