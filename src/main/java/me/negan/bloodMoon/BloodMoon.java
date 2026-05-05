@@ -7,6 +7,8 @@ import me.negan.bloodMoon.moons.MoonManager;
 import me.negan.bloodMoon.utils.NightSwitchUtil;
 import me.negan.bloodMoon.utils.SleepBlockUtil;
 import me.negan.bloodMoon.variants.VariantManager;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -43,11 +45,16 @@ public class BloodMoon extends JavaPlugin {
         rewardManager = new RewardManager(this);
         bossBarManager = new BossbarManager(this, rewardManager);
         moonManager = new MoonManager(this, bossBarManager, rewardManager);
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            bossBarManager.removeBossBar(player);
+        }
     }
 
     private void initSystems() {
         nightSwitch = new NightSwitchUtil(this, dataManager, moonManager);
         nightManager = new NightManager(this, nightSwitch, moonManager);
+        nightManager.loadWorld();
     }
 
     private void startServices() {
@@ -79,6 +86,7 @@ public class BloodMoon extends JavaPlugin {
         pm.registerEvents(new VariantSpawnListener(this, dataManager), this);
         pm.registerEvents(new EnvironmentControlListener(this, nightSwitch), this);
         pm.registerEvents(new FaceZombieListener(this), this);
+        pm.registerEvents(new ZombieBruteHitListener(this), this);
     }
 
     private void startSchedulers() {

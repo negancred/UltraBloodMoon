@@ -14,6 +14,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class FaceZombieVariant implements SpawnableVariant{
@@ -32,7 +33,6 @@ public class FaceZombieVariant implements SpawnableVariant{
     private static final Random random = new Random();
 
     public static void apply(Zombie zombie, JavaPlugin plugin) {
-
         NamespacedKey moonMobKey = new NamespacedKey(plugin, "bloodmoon_mob");
 
         zombie.getPersistentDataContainer().set(
@@ -50,17 +50,16 @@ public class FaceZombieVariant implements SpawnableVariant{
                 (byte) 1
         );
 
-
-        double baseHealth = zombie.getAttribute(Attribute.MAX_HEALTH).getBaseValue();
+        zombie.setCanPickupItems(false);
+        zombie.setSilent(true);
+        zombie.setGlowing(true);
+        double baseHealth = Objects.requireNonNull(zombie.getAttribute(Attribute.MAX_HEALTH)).getBaseValue();
         double newHealth = baseHealth * hpMultiplier;
 
-        zombie.getAttribute(Attribute.MAX_HEALTH).setBaseValue(newHealth);
+        Objects.requireNonNull(zombie.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(newHealth);
         zombie.setHealth(newHealth);
 
         zombie.getEquipment().setHelmet(createPlayerHead());
-        zombie.getEquipment().setChestplate(createRedArmor(Material.LEATHER_CHESTPLATE));
-        zombie.getEquipment().setLeggings(createRedArmor(Material.LEATHER_LEGGINGS));
-        zombie.getEquipment().setBoots(createRedArmor(Material.LEATHER_BOOTS));
         ItemStack weapon;
 
         try {
@@ -71,9 +70,6 @@ public class FaceZombieVariant implements SpawnableVariant{
 
         zombie.getEquipment().setItemInMainHand(weapon);
         zombie.getEquipment().setHelmetDropChance(0f);
-        zombie.getEquipment().setChestplateDropChance(0f);
-        zombie.getEquipment().setLeggingsDropChance(0f);
-        zombie.getEquipment().setBootsDropChance(0f);
         zombie.getEquipment().setItemInMainHandDropChance(0f);
 
         zombie.setSilent(true);
@@ -95,14 +91,5 @@ public class FaceZombieVariant implements SpawnableVariant{
         return head;
     }
 
-    private static ItemStack createRedArmor(Material material) {
-        ItemStack item = new ItemStack(material);
 
-        if (item.getItemMeta() instanceof org.bukkit.inventory.meta.LeatherArmorMeta meta) {
-            meta.setColor(org.bukkit.Color.RED);
-            item.setItemMeta(meta);
-        }
-
-        return item;
-    }
 }

@@ -27,15 +27,24 @@ public class ZombieBrute implements SpawnableVariant {
     public static void apply(Zombie zombie, JavaPlugin plugin) {
 
         NamespacedKey moonMobKey = new NamespacedKey(plugin, "bloodmoon_mob");
+        NamespacedKey bruteKey = new NamespacedKey(plugin, "zombie_brute");
 
         zombie.getPersistentDataContainer().set(
                 moonMobKey,
                 PersistentDataType.BYTE,
                 (byte) 1
         );
+        zombie.getPersistentDataContainer().set(
+                bruteKey,
+                PersistentDataType.BYTE,
+                (byte) 1
+        );
 
         double flatHealth = plugin.getConfig().getDouble("variants.zombie_brute.hp", 100.0);
         double scale = plugin.getConfig().getDouble("variants.zombie_brute.scale", 1.4);
+
+        zombie.setAdult();
+        zombie.setCanPickupItems(false);
 
 
         if (zombie.getAttribute(Attribute.SCALE) != null) {

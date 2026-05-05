@@ -81,22 +81,29 @@ public class BossbarManager {
     }
 
     public void handleJoin(Player player) {
+
         updateBossBar(player);
     }
 
     public void handleQuit(Player player) {
-        BossBar bar = bossBars.remove(player.getUniqueId());
-        if (bar != null) {
-            bar.removeAll();
-        }
+        removeBossBar(player);
     }
 
     public void handleWorldChange(Player player) {
         if (!isOverworld(player)) {
-            handleQuit(player);
+            removeBossBar(player);
             return;
         }
 
         updateBossBar(player);
     }
+
+    public void removeBossBar(Player player) {
+        BossBar bar = bossBars.remove(player.getUniqueId());
+
+        if (bar != null) {
+            bar.removeAll();
+        }
+    }
+
 }

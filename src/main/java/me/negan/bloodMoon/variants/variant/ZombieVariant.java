@@ -32,6 +32,7 @@ public class ZombieVariant implements SpawnableVariant {
     public static void apply(Zombie zombie, JavaPlugin plugin) {
 
         NamespacedKey moonMobKey = new NamespacedKey(plugin, "bloodmoon_mob");
+        zombie.setCanPickupItems(false);
 
         zombie.getPersistentDataContainer().set(
                 moonMobKey,
