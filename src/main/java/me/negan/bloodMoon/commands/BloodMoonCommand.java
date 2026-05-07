@@ -52,7 +52,11 @@ public class BloodMoonCommand implements TabExecutor {
             return List.of("start", "chance", "current", "score", "spawn");
         }
 
-        if (args.length >= 2 && args[0].equalsIgnoreCase("spawn")) {
+        if (args[0].equalsIgnoreCase("start") && args.length == 2) {
+            return List.of("blood", "hallowed", "arcane");
+        }
+
+        if (args[0].equalsIgnoreCase("spawn")) {
             return variantSpawnCommand.onTabComplete(sender, command, alias, args);
         }
 

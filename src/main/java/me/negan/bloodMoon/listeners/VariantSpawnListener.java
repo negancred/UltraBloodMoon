@@ -42,12 +42,14 @@ public class VariantSpawnListener implements Listener {
         applyVariant(entity, variant);
 
         double bmChance = chanceManager.computeBloodMoonChance(night);
-
-        Bukkit.getLogger().info(
-                "[UltraBloodMoon] Variant: " + variant.name()
-                        + " spawned with chance of: "
-                        + String.format("%.4f", chance)
-        );
+        boolean isLogTrue = plugin.getConfig().getBoolean("general.console_spawn_messages", false);
+        if (isLogTrue) {
+            Bukkit.getLogger().info(
+                    "[UltraBloodMoon] Variant: " + variant.name()
+                            + " spawned with chance of: "
+                            + String.format("%.4f", chance)
+            );
+        }
     }
 
     private void applyVariant(LivingEntity entity, BloodMoonVariant variant) {

@@ -44,9 +44,7 @@ public class Spook implements SpawnableVariant {
         }
 
         skeleton.getEquipment().clear();
-
         Objects.requireNonNull(skeleton.getAttribute(Attribute.SCALE)).setBaseValue(0.85);
-
         skeleton.addPotionEffect(new PotionEffect(
                 PotionEffectType.INVISIBILITY,
                 Integer.MAX_VALUE,

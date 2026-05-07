@@ -52,7 +52,7 @@ public class FaceZombieVariant implements SpawnableVariant{
 
         zombie.setCanPickupItems(false);
         zombie.setSilent(true);
-        zombie.setGlowing(true);
+
         double baseHealth = Objects.requireNonNull(zombie.getAttribute(Attribute.MAX_HEALTH)).getBaseValue();
         double newHealth = baseHealth * hpMultiplier;
 

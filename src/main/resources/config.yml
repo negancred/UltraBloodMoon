@@ -38,11 +38,11 @@ pity_system:
 
 
 general:
-  console_spawn_messages: true
+  console_spawn_messages: false
   maximum_lightLevel_spawn: 4 # Max light level allowed for variant mob spawning
   aggro-chance: 0.7
   show_score_on_bossbar: true
-  world_name: world
+  world_name: world # The plugin currently supports only ONE world.
 
 moons:
   default_blood_moon: {} # Default moon (no special mechanics)
@@ -77,7 +77,7 @@ variants:
     lifesteal: 1.0
 
   spooky_archer:
-    hp: 1.4 # Health multiplier
+    hp: 1.4
 
   spooky_skeleton:
     hp: 1.4

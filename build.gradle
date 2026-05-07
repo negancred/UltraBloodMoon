@@ -1,10 +1,11 @@
 plugins {
     id 'java'
+    id("com.gradleup.shadow") version "9.3.1"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
 group = 'me.negan'
-version = '1.4.1'
+version = '1.5.0'
 
 repositories {
     mavenCentral()
@@ -16,6 +17,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    implementation("org.bstats:bstats-bukkit:3.2.1")
 }
 
 tasks {
@@ -53,6 +55,10 @@ processResources {
         expand props
     }
 }
+tasks.shadowJar {
+    relocate 'org.bstats', 'me.negan.ultrabloodmoon.libs.bstats'
+}
+
 
 tasks.register('copyToServer', Copy) {
     dependsOn build

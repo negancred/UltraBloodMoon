@@ -52,6 +52,7 @@ public class VariantManager {
     }
 
     private void spawnHostileNearPlayer(Player player) {
+        boolean isLogTrue = plugin.getConfig().getBoolean("general.console_spawn_messages", false);
 
         if (!isValidWorld(player)) return;
 
@@ -70,15 +71,16 @@ public class VariantManager {
             tagBloodMoonMob(entity);
             handleAggro(entity);
 
-            boolean isLogTrue = plugin.getConfig().getBoolean("general.console_spawn_messages", false);
+
             if (isLogTrue) {
                 logSpawn(player, entity, spawnLoc);
             }
 
             return;
         }
-
-        logFailedSpawn(player);
+        if (isLogTrue) {
+            logFailedSpawn(player);
+        }
     }
 
     private int getBloodMoonMobCount() {

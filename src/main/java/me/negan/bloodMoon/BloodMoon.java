@@ -7,6 +7,7 @@ import me.negan.bloodMoon.moons.MoonManager;
 import me.negan.bloodMoon.utils.NightSwitchUtil;
 import me.negan.bloodMoon.utils.SleepBlockUtil;
 import me.negan.bloodMoon.variants.VariantManager;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,7 +27,10 @@ public class BloodMoon extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        getLogger().info("ULTRA BLOOD MOON v1.4.1-BETA by: POLACREDE");
+        getLogger().info("ULTRA BLOOD MOON v1.5.0 RELEASE by: POLACREDE");
+        int pluginId = 31145;
+        Metrics metrics = new Metrics(this, pluginId);
+
 
         initManagers();
         initSystems();
